@@ -1,34 +1,50 @@
-Heroku buildpack: Hello
-=======================
+Heroku buildpack: Environment variables
+=======================================
+This buildpack allows manipulating environment variables.
+It does this by running the `source` bash-command on the file `bin/envvars` in
+your apps repository.
 
-This is an example [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks).
+If your repository does not have the `bin/envvars`-file, the buildpack will
+fail.
+
+By default the following environment variables will be availble to `bin/envvars`:
+* `$BUILD_DIR`
+   The repository directory. When the build ends (after all buildpacks have
+   been exectued) it ends up in `/app/`, but as the script is invoked during
+   the build process, it is in a temporary directory.
+* `$CACHE_DIR`
+  The package (for npm, pip etc.) cache directory that is persisted between
+  builds.
+* `$ENV_DIR`
+  _to be described_
+* Your normal environment variables set via `heroku config:set` are _not_
+  available. They are not made available by Heroku during the build process,
+  they are only made available once the app starts.
+* Any environment variables set by other buildpacks (and passed on via the `exports`-file)
+  are available
+
+<!-- BP_DIR=$(cd $(dirname $0); cd ..; pwd) -->
 
 Usage
 -----
 
 Example usage:
 
-    $ ls
-    hello.txt
+    $ cat bin/envvars
+    # Print current environment
+    env
+    # Set `CPATH` environment variable to include `xmlsec1`
+    export CPATH=$BUILD_DIR/.apt/usr/include/xmlsec1:$CPATH
 
-    $ heroku create --stack cedar --buildpack http://github.com/heroku/heroku-buildpack-hello.git
+    $ heroku buildpacks:set --app example-app https://github.com/heroku/heroku-buildpack-multi.git
+    $ heroku buildpacks:add --app example-app --index 1 https://github.com/heroku/heroku-buildpack-apt.git
+    $ heroku buildpacks:add --app example-app --index 2 https://github.com/malthejorgensen/heroku-buildpack-envvars.git
+    $ heroku buildpacks:add --app example-app --index 3 https://github.com/malthejorgensen/heroku-buildpack-python.git
 
     $ git push heroku master
+    TODO: Correct output below
     ...
     -----> Heroku receiving push
     -----> Fetching custom buildpack
     -----> HelloFramework app detected
     -----> Found a hello.txt
-
-The buildpack will detect that your app has a `hello.txt` in the root. If this file has contents, it will be copied to `goodbye.txt` with instances of the world `hello` changed to `goodbye`.
-
-Hacking
--------
-
-To use this buildpack, fork it on Github.  Push up changes to your fork, then create a test app with `--buildpack <your-github-url>` and push to it.
-
-For example, you can change the displayed name of the buildpack to `GoodbyeFramework`. Open `bin/detect` in your editor, and change `HelloFramework` to `GoodbyeFramework`.
-
-Commit and push the changes to your buildpack to your Github fork, then push your sample app to Heroku to test.  You should see:
-
-    -----> GoodbyeFramework app detected

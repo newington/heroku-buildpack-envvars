@@ -1,8 +1,13 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# this pack is valid for apps with a hello.txt in the root
-if [ -f $1/hello.txt ]; then
-  echo "HelloFramework"
+BP_DIR=$(cd $(dirname $0); cd ..; pwd)
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+# Detect if the `bin/envvars`-hook exists in the repository
+if [ -f $BUILD_DIR/bin/envvars ]; then
+  echo 'Hello from the envvars-buildpack!'
   exit 0
 else
   exit 1
