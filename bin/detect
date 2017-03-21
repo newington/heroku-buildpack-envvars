@@ -7,7 +7,7 @@ ENV_DIR=$3
 
 # Detect if the `bin/envvars`-hook exists in the repository
 if [ -f $BUILD_DIR/bin/envvars ]; then
-  echo 'Hello from the envvars-buildpack!'
+  echo 'envvars'
   exit 0
 else
   exit 1
