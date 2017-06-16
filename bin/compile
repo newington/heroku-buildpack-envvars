@@ -21,4 +21,5 @@ echo 'Running `bin/envvars` inside the buildpack environment' | indent
 source $BUILD_DIR/bin/envvars
 
 # give environment to later buildpacks
-export | grep -E -e ' (PATH|LD_PRELOAD|LD_LIBRARY_PATH|LIBRARY_PATH|INCLUDE_PATH|CPATH|CPPPATH|PKG_CONFIG_PATH)='  > "$BP_DIR/export"
+touch "$BP_DIR/export"
+export | grep -E -e ' (PATH|LD_PRELOAD|LD_LIBRARY_PATH|LIBRARY_PATH|INCLUDE_PATH|CPATH|CPPPATH|PKG_CONFIG_PATH)='  >> "$BP_DIR/export"
