@@ -18,8 +18,18 @@ indent() {
 }
 
 echo 'Running `bin/envvars` inside the buildpack environment' | indent
+echo "Here's that bin/envvars file, which I'll source in a moment:"
+cat $BUILD_DIR/bin/envvars
 source $BUILD_DIR/bin/envvars
+
+echo "Here's the output of export:"
+output=$(export)
+echo $output
 
 # give environment to later buildpacks
 touch "$BP_DIR/export"
 export | grep -E -e ' (PATH|LD_PRELOAD|LD_LIBRARY_PATH|LIBRARY_PATH|INCLUDE_PATH|CPATH|CPPPATH|PKG_CONFIG_PATH)='  >> "$BP_DIR/export"
+
+# Some temp debugging
+echo "Export file created:\n"
+cat $BP_DIR/export
