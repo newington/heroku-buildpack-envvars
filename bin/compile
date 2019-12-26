@@ -32,20 +32,10 @@ export_env_dir() {
 
 export_env_dir $ENV_DIR
 
-echo "Here's my starting env:"
-echo `export`
-
-echo 'Running `bin/envvars` inside the buildpack environment' | indent
-echo "Here's that bin/envvars file, which I'll source in a moment:"
-cat $BUILD_DIR/bin/envvars
+echo 'Sourcing `bin/envvars` inside the buildpack environment' | indent
 source $BUILD_DIR/bin/envvars
 
-# give environment to later buildpacks
+# Export the environment to later buildpacks
 denied_exports_regex=' (BUILDPACK_[A-Z_]+|DYNO|HEROKU_[A-Z_]+|HOME|OLDPWD|PORT|PS1|PWD|REQUEST_ID|SHLVL|SOURCE_VERSION|STACK)='
 touch "$BP_DIR/export"
-# export | grep -E -e ' (PATH|LD_PRELOAD|LD_LIBRARY_PATH|LIBRARY_PATH|INCLUDE_PATH|CPATH|CPPPATH|PKG_CONFIG_PATH)='  >> "$BP_DIR/export"
 export | grep -Ev $denied_exports_regex >> $BP_DIR/export
-
-# Some temp debugging
-echo "Export file created:\n"
-cat $BP_DIR/export
