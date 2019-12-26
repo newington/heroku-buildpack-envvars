@@ -42,7 +42,7 @@ cat $BUILD_DIR/bin/envvars
 source $BUILD_DIR/bin/envvars
 
 # give environment to later buildpacks
-denied_exports_regex=' (DYNO|HEROKU_[A-Z_]+|HOME|PORT|PS1|PWD)='
+denied_exports_regex=' (BUILDPACK_[A-Z_]+|DYNO|HEROKU_[A-Z_]+|HOME|OLDPWD|PORT|PS1|PWD|REQUEST_ID|SHLVL|SOURCE_VERSION|STACK)='
 touch "$BP_DIR/export"
 # export | grep -E -e ' (PATH|LD_PRELOAD|LD_LIBRARY_PATH|LIBRARY_PATH|INCLUDE_PATH|CPATH|CPPPATH|PKG_CONFIG_PATH)='  >> "$BP_DIR/export"
 export | grep -Ev $denied_exports_regex >> $BP_DIR/export
