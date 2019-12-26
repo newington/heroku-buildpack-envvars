@@ -43,8 +43,10 @@ output=$(export)
 echo $output
 
 # give environment to later buildpacks
+denied_exports_regex=' (DYNO|HEROKU_[A-Z_]+|HOME|PORT|PS1|PWD)='
 touch "$BP_DIR/export"
-export | grep -E -e ' (PATH|LD_PRELOAD|LD_LIBRARY_PATH|LIBRARY_PATH|INCLUDE_PATH|CPATH|CPPPATH|PKG_CONFIG_PATH)='  >> "$BP_DIR/export"
+# export | grep -E -e ' (PATH|LD_PRELOAD|LD_LIBRARY_PATH|LIBRARY_PATH|INCLUDE_PATH|CPATH|CPPPATH|PKG_CONFIG_PATH)='  >> "$BP_DIR/export"
+export | grep -Ev $denied_exports_regex >> $BP_DIR/export
 
 # Some temp debugging
 echo "Export file created:\n"
