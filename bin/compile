@@ -39,3 +39,7 @@ source $BUILD_DIR/bin/envvars
 denied_exports_regex=' (BUILDPACK_[A-Z_]+|DYNO|HEROKU_[A-Z_]+|HOME|OLDPWD|PORT|PS1|PWD|REQUEST_ID|SHLVL|SOURCE_VERSION|STACK)='
 touch "$BP_DIR/export"
 export | grep -Ev $denied_exports_regex >> $BP_DIR/export
+
+echo "Exported env:"
+echo
+cat $BP_DIR/export
