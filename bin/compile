@@ -40,6 +40,7 @@ denied_exports_regex=' (BUILDPACK_[A-Z_]+|DYNO|HEROKU_[A-Z_]+|HOME|OLDPWD|PORT|P
 touch "$BP_DIR/export"
 export | grep -Ev $denied_exports_regex >> $BP_DIR/export
 
-echo "Exported env:"
-echo
-cat $BP_DIR/export
+# Export the whole thing to a .profile.d script so it's available at runtime,
+# too. Later, this should be narrowed down to only the new/changed env vars.
+mkdir -p $BUILD_DIR/.profile.d
+cp $BP_DIR/export $BUILD_DIR/.profile.d/envvars.sh
